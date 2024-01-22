@@ -1,0 +1,20 @@
+{
+  "name": "todo-server",
+  "version": "0.0.0",
+  "description": "The server for a simple todo application with Node.js.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start:dev": "node --env-file=.env src/index.js"
+  },
+  "author": "Kevin Mudiandambo",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/mongodb": "^8.0.0",
+    "fastify": "^4.25.2",
+    "fastify-plugin": "^4.5.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0"
+  }
+}
