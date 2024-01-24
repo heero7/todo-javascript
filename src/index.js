@@ -1,5 +1,5 @@
 import Fastify from "fastify";
-import todoRoutes from "./routes.js";
+import { todoRoutes, authRoutes } from "./routes.js";
 import databaseConnector from "./database.js";
 
 const fastify = Fastify({ logger: true });
@@ -11,10 +11,11 @@ fastify.register(databaseConnector);
 
 // Register routes.
 fastify.register(todoRoutes);
+fastify.register(authRoutes);
 
 
 // Run the server.
-fastify.listen({ port: 7200 }, (error) => {
+fastify.listen({ port: process.env.PORT }, (error) => {
     if (error) {
         fastify.log.error(error); 
         process.exit(1);
