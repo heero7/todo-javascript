@@ -1,5 +1,6 @@
 import Fastify from "fastify";
-import { todoRoutes, authRoutes } from "./routes.js";
+import { todoRoutes } from "./todoRoutes.js";
+import { authRoutes } from "./authRoutes.js";
 import databaseConnector from "./database.js";
 
 const fastify = Fastify({ logger: true });
