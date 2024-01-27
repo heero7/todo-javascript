@@ -1,10 +1,6 @@
 import bcrypt from "bcryptjs";
 import { v4 as uuidGenV4 } from "uuid";
-
-/**
- * Gets all the user routes to register with fastify.
- * @param {FastifyInstance} fastify instance.
- */
+import jwt from "jsonwebtoken";
 
 /**
  * Gets all the user routes to register with fastify.
@@ -13,13 +9,6 @@ import { v4 as uuidGenV4 } from "uuid";
 export async function authRoutes(fastify) {
     const usersCollection = fastify.mongo.db.collection("Users");
     fastify.post("/signup", async (request, reply) => {
-        // Steps
-        // 1. Does this email exist?
-        // 2. Does this user name exist?
-        // If no to the above return back unsuccessful.
-
-        // ✅ Save the user info.
-
         // Validate using JSON Schema.
         // Todo: Feel like this could be a lot..
         // Todo: Get rid of this.
@@ -30,18 +19,20 @@ export async function authRoutes(fastify) {
 
         // I think to check for a previous user name / email
         //usersCollection.findOne({ userName, email });
-
         const userId = uuidGenV4();
-        const hash = await bcrypt.hash(password, Number(String(process.env.SALT_ROUNDS)));
+        const hash = await bcrypt.hash(
+            password,
+            Number(String(process.env.SALT_ROUNDS)),
+        );
         const signUpUser = {
             userId,
             userName,
             email,
             password: hash,
-            createdDate: new Date()
+            createdDate: new Date(),
         };
 
-        usersCollection.insertOne(signUpUser);  
+        usersCollection.insertOne(signUpUser);
         fastify.log.info("Successfully created a user.");
 
         reply
@@ -57,32 +48,32 @@ export async function authRoutes(fastify) {
         // 2. Get the password
         // 3. Send back a token for the user
         const { userName, password } = request.body;
-        const findResult = usersCollection.findOne({ userName });
+        const findResult = await usersCollection.findOne({ userName });
         if (!findResult) {
             fastify.log.info("No user found");
-            reply
-                .code(401)
-                .send();
-                return;
+            reply.code(401).send();
+            return;
         }
 
-        // Now we have to compare bycrypt's thing to this.
         const compareResult = await bcrypt.compare(password, findResult.password);
         if (!compareResult) {
-            // This isn't the right password.
             fastify.log.error("The password entered is not right!");
             // What should I return from the API? Bad request?
             // Answer: Unauthorized
-            reply
-                .code(401)
-                .send();
+            reply.code(401).send();
             return;
         }
 
         fastify.log.info("These credentials look good.");
+        // Sign the web token
+        const accessToken = jwt.sign(
+            {
+                exp: Math.floor(Date.now() / 1000) + 60 * 60,
+                userId: findResult.userId,
+            },
+            process.env.JWT_SECRET,
+        );
+        reply.code(200).send({ userId: findResult.userId, accessToken });
         // I like the idea of giving back a token that contains the user id
-        reply
-            .code(200)
-            .send({ authToken: "123abc456def789ghi0!@" });
     });
 }
