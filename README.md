@@ -2,6 +2,8 @@
 
 <u>Client</u>
 - htmx hopefully
+- Read this for some help on auth and ssr
+    - https://www.bugsnag.com/blog/server-side-rendering-and-authenticated-content/
 
 <u>Server</u>
 - JavaScript
