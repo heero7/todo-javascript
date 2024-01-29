@@ -18,3 +18,11 @@ to your databsase. The connection string should look like this
 - username: add a user from the Atlas 
 - password: password for the user
 - <u>db-name</u>: *Don't forget this, otherwise you won't connect to the DB*
+
+## Server notes
+- Added property forwarding to routes. Needed the userId, but didn't want to call `jwt.verify` again.
+    - Reference: https://github.com/fastify/fastify/issues/303
+- All routes run a middleware to extract and verify an access token.
+    - Except for the auth routes
+        - signin
+        - signup
