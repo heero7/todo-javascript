@@ -17,8 +17,12 @@ export async function authRoutes(fastify) {
             return { error: "Missing some important properties" };
         }
 
-        // I think to check for a previous user name / email
-        //usersCollection.findOne({ userName, email });
+        const previouslyFound = await usersCollection.findOne({ userName, email });
+        if (previouslyFound) {
+            fastify.log.error("User name or email is already taken.");
+            reply.code(422).send({ error: "Username or email has already been taken." });
+            return;
+        }
         const userId = uuidGenV4();
         const hash = await bcrypt.hash(
             password,
