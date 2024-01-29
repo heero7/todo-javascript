@@ -112,5 +112,18 @@ export async function todoRoutes(fastify) {
         fastify.log.error(`Could not delete todo with id=${todoId}. No todos found.`);
         reply.code(404).send({ error: "Could not find todo by id." });
     });
+
+    fastify.delete("/todos", async (request, reply) => {
+        const { userId } = request;
+        const { deletedCount } = await todoCollection.deleteMany({ userId });
+
+        if (deletedCount === 0) {
+            fastify.log.error(`There were no todos to delete for userId=${userId}`);
+            reply.code(404).send({ error: "There were no todos to delete." });
+            return;
+        }
+
+        reply.send(200).send();
+    });
 }
 
