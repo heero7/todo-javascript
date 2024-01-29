@@ -31,8 +31,11 @@ export async function todoRoutes(fastify) {
 
     const todoCollection = fastify.mongo.db.collection("Todos");
 
-    fastify.get("/todos", async () => {
-        const result = await todoCollection.find().toArray();
+    fastify.get("/todos", async (request) => {
+        const { userId } = request;
+        const result = await todoCollection
+            .find({ userId: userId })
+            .toArray();
         return result;
     });
 
