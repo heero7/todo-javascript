@@ -73,7 +73,7 @@ export async function todoRoutes(fastify) {
         }
 
         const { todoId } = request.params;
-        const existingTodo = await todoCollection.findOne({ todoId });
+        const existingTodo = await todoCollection.findOne({ userId, todoId });
 
         if (!existingTodo) {
             fastify.log.error(`No todo exists for this todoId=${todoId}`);
@@ -96,6 +96,21 @@ export async function todoRoutes(fastify) {
         const mongoDbOptions = { upsert: false };
         await todoCollection.updateOne({ todoId }, updater, mongoDbOptions);
         reply.code(200).send();
+    });
+
+    fastify.delete("/todos/:todoId", async (request, reply) => {
+        const { userId } = request;
+        const { todoId } = request.params;
+
+        const { deletedCount } = await todoCollection.deleteOne({ userId, todoId });
+        if (deletedCount === 1) {
+            fastify.log.info(`Deleted todo with id=${todoId}`);
+            reply.send(200).send();
+            return;
+        }
+
+        fastify.log.error(`Could not delete todo with id=${todoId}. No todos found.`);
+        reply.code(404).send({ error: "Could not find todo by id." });
     });
 }
 
