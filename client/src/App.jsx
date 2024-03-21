@@ -1,8 +1,15 @@
 import React from "react";
 import "./app.css";
+import Sidebar from "./Sidebar";
+import Title from "./Title";
 
 function App() {
-    return (<h1 className="text-primary text-4xl font-bold">Hello, world!</h1>);
+    return (
+        <div>
+            <Title />
+            <Sidebar />
+        </div>
+    );
 }
 
 export default App;
