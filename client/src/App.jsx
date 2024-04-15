@@ -1,30 +1,29 @@
 import React from "react";
-import Title from "./Title";
 import { ChakraProvider } from "@chakra-ui/react";
-import TodoItem from "./TodoItem";
+import { createBrowserRouter, RouterProvider, Link } from "react-router-dom";
+import LoginPage from "./LoginPage";
+import LandingPage from "./LandingPage";
+import Home from "./Home";
 
-const dummyData = [
-    {
-        name: "Dishes",
-        description: "Make sure to also use the dishwasher"
-    },
-    {
-        name: "Workout",
-        description: "Part 2 of the Ironman"
-    },
-    {
-        name: "Stretch",
-        description: "After workout out, hit the muscles hit."
-    }
-];
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <LandingPage />
+  },
+  {
+    path: "/login",
+    element: <LoginPage />
+  },
+  {
+    path: "/home",
+    element: <Home />
+  }
+])
 
 function App() {
     return (
         <ChakraProvider>
-            <div>
-                <Title />
-                {dummyData.map(({ name, description }, index) => <TodoItem key={index} name={name} description={description} />)}
-            </div>
+          <RouterProvider router={router} />
         </ChakraProvider>
     );
 }

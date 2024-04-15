@@ -51,9 +51,11 @@ export async function authRoutes(fastify) {
         // 1. Get the username
         // 2. Get the password
         // 3. Send back a token for the user
+        console.log('Before signin');
         const { userName, password } = request.body;
         const findResult = await usersCollection.findOne({ userName });
         if (!findResult) {
+            fastify.log.info("User entered: " + userName);
             fastify.log.info("No user found");
             reply.code(401).send();
             return;
