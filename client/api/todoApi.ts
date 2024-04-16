@@ -1,9 +1,9 @@
-
 export async function getAllTodos() {
-  const result = await fetch('http://localhost:7200/', {
+  const authToken = getToken();
+  const result = await fetch('http://localhost:7200/todos', {
     method: 'GET',
     headers: {
-      'Authorization': `bearer ${getToken()}`
+      'Authorization': `Bearer ${authToken}`
     }
   });
 
@@ -13,7 +13,7 @@ export async function getAllTodos() {
 function getToken() {
   const token = localStorage.getItem('token');
   if (token) {
-    return JSON.parse(token);
+    return JSON.parse(token).accessToken;
   }
 
   // if we've gotten here, we need to get a refresh token.
