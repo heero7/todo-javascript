@@ -1,37 +1,49 @@
-import React from "react";
+import React, { useState } from "react";
 import { 
     Card,
-    Stack,
     CardBody,
-    CardFooter,
-    Heading,
-    Image,
+    Flex,
     Text,
-    Spinner,
-    Button } from "@chakra-ui/react";
+    Spacer,
+    Input,
+    IconButton
+} from "@chakra-ui/react";
+import { CheckIcon, EditIcon, CloseIcon } from "@chakra-ui/icons";
 
-function TodoItem({ name, description }) {
+function TodoItem({ todoId, name, createdAt, completed, onCompleteClick, onEditTodoClick }) {
+    const [isEditing, setIsEditing] = useState(false);
+    const [editValue, setEditValue] = useState('');
+
+    const handleEditTodo = (event) => setEditValue(event.target.value);
+
+    function editName() {
+      if (editValue === name || editValue === '') {
+        setIsEditing(false);
+        return;
+      }
+      onEditTodoClick(todoId, editValue);
+    }
     return (
-        <div>
-            <Card overflow='hidden' variant='outline' direction={{ base: 'column', sm: 'row'}}>
-                <Image
-                    objectFit='cover'
-                    maxW={{ base: '100%', sm: '200px' }}
-                    src={`https://picsum.photos/200?random=${Math.random()}`} 
-                    fallback={<Spinner size='xl' />} />
-                
-                <Stack>
-                    <CardBody>
-                        <Heading size='md'>{name}</Heading>
-                        <Text py="2">{description}</Text>
-                    </CardBody>
-
-                    <CardFooter>
-                        <Button>Complete</Button>
-                    </CardFooter>
-                </Stack>
-            </Card>
-        </div>
+        <>
+          <Card maxW='lg' minW='md'>
+            <CardBody>
+              <Flex>
+                {!isEditing && <Text onClick={() => setIsEditing(true)}>{name}</Text>}
+                {isEditing && 
+                  <>
+                    <Input size='md' placeholder={name} onChange={handleEditTodo} />
+                    <IconButton onClick={() => setIsEditing(false)} icon={<CloseIcon />} />
+                    <IconButton onClick={() => editName()} icon={<EditIcon />} />
+                  </>
+                }
+                <Spacer />
+              {!isEditing && <IconButton onClick={onCompleteClick} icon={<CheckIcon />} />}
+              </Flex>
+              <Text fontSize='xs'>Created on {new Date(createdAt).toLocaleDateString()}</Text>
+              <Text fontSize='xs'>Is Completed: {completed ? "✅" : "❌"}</Text>
+            </CardBody>
+          </Card>
+        </>
     );
 };
 

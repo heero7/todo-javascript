@@ -23,6 +23,14 @@ function LoginPage() {
 
   const handleEmailValueChange = (event) => setEmail(event.target.value);
   const handlePasswordValueChange = (event) => setPassword(event.target.value);
+  
+  // todo: when reaching this page useEffect for if localStorage still has
+  // a valid token.
+  // should there be a server route to check? 
+  // 1. Create a route, validate.
+  // 2. When component renders, if localStorage.getItem() exists go validate.
+  //    - else do nothing.
+  // 3. If we can validate the token, let's just navigate to home with said user.
 
   async function login(email, creds) {
     const result = await fetch("http://localhost:7200/signin", {
