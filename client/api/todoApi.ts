@@ -27,22 +27,34 @@ export async function getLoggedInUser() {
   };
 }
 
+/*
+ * Adds a todo to the database.
+ * @param {string} todoName: the name of the todo.
+ */
 export async function addTodo(todoName) {
   const authToken = getToken();
   const result = await fetch('http://localhost:7200/todos', {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${authToken}`
+      'Authorization': `Bearer ${authToken}`,
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({ name: todoName })
   });
 
-  if (result.status == 200) {
-    return true;
+  if (result.status == 201) {
+    const t = await result.json();
+    return {
+      name: t.name,
+      todoId: t.todoId,
+      completed: t.completed,
+      createdAt: t.createdAt,
+      success: true 
+    };
   }
 
   // Display an error?
-  return false;
+  return { success: false };
 }
 
 export async function getAllTodos() {

@@ -26,7 +26,7 @@ function Home() {
     // Make an api call to save this one todo.
     setTodos(updatedTodos);
   }
-  editTodoItem
+  
 
   /**
    * Edits a todo item. Then updates the
@@ -45,9 +45,22 @@ function Home() {
     setTodos(updatedTodos);
   }
 
-  function submitNewTodo() {
-    alert(todoName);
-    // add todo 
+  async function submitNewTodo() {
+    const result = await addTodo(todoName);
+    if (!result.success) {
+      console.error('Could not add new todo.');
+      return;
+    }
+
+    const updatedTodos = [ ...todos, {
+      name: result.name,
+      completed: result.completed,
+      createdAt: result.createdAt,
+      id: result.todoId
+    }];
+
+    setTodos(updatedTodos);
+    setTodoName('');
   }
 
   useEffect(() => {
@@ -88,13 +101,17 @@ function Home() {
             onEditTodoClick={editTodoItem}
             onCompleteClick={() => completeTodo(todo.id)}
             todoId={todo.id} />)}
+        {/* 
+          Add a section to add a new todo item
+          The current spot gets hidden very quickly.
+          🤷
+        */}
         <InputGroup>
-          <Input placeholder='Add a new todo' onChange={handleTodoNameOnChange} />
+          <Input placeholder='Add a new todo' onChange={handleTodoNameOnChange} value={todoName} />
           <InputRightElement width='4.5rem'>
             <Button size='sm' onClick={submitNewTodo}>Add</Button>
           </InputRightElement>
         </InputGroup>
-        {/* Add a section to add a new todo item */}
       </VStack>
     </Center>
   );
