@@ -7,7 +7,8 @@ module.exports = {
     devtool: "source-map",
     output: {
         path: path.resolve(__dirname, "./dist"),
-        filename: "index_bundle.js"
+        filename: "index_bundle.js",
+        publicPath: "/"
     },
     target: "web",
     devServer: {
@@ -17,7 +18,8 @@ module.exports = {
         },
         open: true,
         hot: true,
-        liveReload: true
+        liveReload: true,
+        historyApiFallback: true
     },
     resolve: {
         extensions: [".js", ".jsx", ".json"]

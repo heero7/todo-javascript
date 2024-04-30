@@ -2,6 +2,7 @@ import Fastify from "fastify";
 import cors from "@fastify/cors";
 import { todoRoutes } from "./todoRoutes.js";
 import { authRoutes } from "./authRoutes.js";
+import { userRoutes } from "./userRoutes.js";
 import databaseConnector from "./database.js";
 
 const fastify = Fastify({ logger: true, file: '../logs/server.log' });
@@ -27,6 +28,7 @@ fastify.register(databaseConnector);
 // Register routes.
 fastify.register(todoRoutes);
 fastify.register(authRoutes);
+fastify.register(userRoutes);
 
 
 // Run the server.

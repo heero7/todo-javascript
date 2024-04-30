@@ -9,9 +9,6 @@ import jwt from "jsonwebtoken";
 export async function authRoutes(fastify) {
     const usersCollection = fastify.mongo.db.collection("Users");
     fastify.post("/signup", async (request, reply) => {
-        // Validate using JSON Schema.
-        // Todo: Feel like this could be a lot..
-        // Todo: Get rid of this.
         const { userName, email, password } = request.body;
         if (!userName || !email || !password) {
             return { error: "Missing some important properties" };
@@ -51,7 +48,6 @@ export async function authRoutes(fastify) {
         // 1. Get the username
         // 2. Get the password
         // 3. Send back a token for the user
-        console.log('Before signin');
         const { userName, password } = request.body;
         const findResult = await usersCollection.findOne({ userName });
         if (!findResult) {

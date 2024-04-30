@@ -21,6 +21,7 @@ function TodoItem({ todoId, name, createdAt, completed, onCompleteClick, onEditT
         setIsEditing(false);
         return;
       }
+      setIsEditing(false);
       onEditTodoClick(todoId, editValue);
     }
     return (
