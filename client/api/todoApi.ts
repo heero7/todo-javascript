@@ -80,3 +80,17 @@ function getToken() {
   // 2. Or do something else?
   return '';
 }
+
+export async function completeTodoItem(todoId) {
+  const authToken = getToken();
+  const result = await fetch(`http://localhost:7200/todos/${todoId}`, {
+    method: 'PATCH',
+    headers: {
+      'Authorization': `Bearer ${authToken}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ updateComplete: true })
+  });
+
+  return result.status === 200;
+}

@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import TodoItem from "./TodoItem.jsx";
 import { Center, VStack, Heading, Input, InputGroup, InputRightElement, Button } from "@chakra-ui/react";
-import { getAllTodos, getLoggedInUser, addTodo } from "../api/todoApi.ts"; 
+import { 
+  getAllTodos,
+  getLoggedInUser,
+  addTodo,
+  completeTodoItem
+} from "../api/todoApi.ts"; 
 
 function Home() {
   const [todoName, setTodoName] = useState('');
@@ -14,7 +19,10 @@ function Home() {
 
   const handleTodoNameOnChange = (event) => setTodoName(event.target.value);
 
-  function completeTodo(id) {
+  async function completeTodo(id) {
+    const result = await completeTodoItem(id);
+    if (!result) return;
+
     const updatedTodos = todos.map((todo) => {
       if (todo.id === id) {
         todo.completed = true;
@@ -23,7 +31,6 @@ function Home() {
       return todo;
     });
 
-    // Make an api call to save this one todo.
     setTodos(updatedTodos);
   }
   
