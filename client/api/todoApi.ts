@@ -94,3 +94,17 @@ export async function completeTodoItem(todoId) {
 
   return result.status === 200;
 }
+
+export async function editTodoItem(todoId, name) {
+  const authToken = getToken();
+  const result = await fetch(`http://localhost:7200/todos/${todoId}`, {
+    method: 'PATCH',
+    headers: {
+      'Authorization': `Bearer ${authToken}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ updatedName: name })
+  });
+
+  return result.status === 200;
+}

@@ -5,7 +5,8 @@ import {
   getAllTodos,
   getLoggedInUser,
   addTodo,
-  completeTodoItem
+  completeTodoItem,
+  editTodoItem
 } from "../api/todoApi.ts"; 
 
 function Home() {
@@ -41,7 +42,10 @@ function Home() {
    * @param {string} newName: the name of the todo item
    * @param {string} id: the id  of the todo item
    */
-  function editTodoItem(id, newName) {
+  async function editTodo(id, newName) {
+    const result = await editTodoItem(id, newName);
+    if (!result) return;
+
     const updatedTodos = todos.map((todo) => {
       if (todo.id === id) {
         todo.name = newName;
@@ -105,7 +109,7 @@ function Home() {
             name={todo.name} 
             createdAt={todo.createdAt}
             completed={todo.completed}
-            onEditTodoClick={editTodoItem}
+            onEditTodoClick={editTodo}
             onCompleteClick={() => completeTodo(todo.id)}
             todoId={todo.id} />)}
         {/* 
